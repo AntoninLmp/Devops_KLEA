@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.efrei</groupId>
-	<artifactId>st2dce</artifactId>
+	<artifactId>klea-app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>st2dce</name>
+	<name>klea-app</name>
 	<description>Demo project for ST2DCE</description>
 	<properties>
 		<java.version>17</java.version>
