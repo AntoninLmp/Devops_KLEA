@@ -18,7 +18,6 @@ COPY src src
 # Build the application
 RUN mvn package -Dvariable=$VARIABLE
 
-RUN ls -la /app/target
 
 # Use a lightweight Java image for the runtime
 FROM openjdk:17-slim

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: klea-app-container
-        image: devopsklea/klea-app:latest
+        image: klea-app:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
