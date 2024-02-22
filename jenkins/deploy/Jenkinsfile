@@ -1,0 +1,68 @@
+pipeline {
+    agent {
+        label 'slave'
+    }
+    
+    // Define environment variables
+    environment {
+        GIT_REPO = 'https://github.com/AntoninLmp/Devops_KLEA.git'
+        DOCKER_REGISTRY='https://registry.hub.docker.com/repository/docker/devopsklea/klea-app'
+        DOCKER_REGISTRY_CREDENTIALS_ID = '18f90c6d-3ed5-48da-be2d-7efa319099d2'
+        KUBE_NAMESPACE = 'development'
+    }    
+
+    stages {
+        // Clone the Git repository
+        stage('Git Clone') {
+            steps {
+                git branch: 'main', url: "${GIT_REPO}"
+            }
+        }
+
+        // Edit pom.xml version
+        stage('Update pom.xml') {
+            steps {
+                script {
+                    // Read the current pom.xml content
+                    def pomContent = readFile('pom.xml')
+
+                    // Update the version with the build number
+                    pomContent = pomContent.replaceAll('<version>0.0.1-SNAPSHOT</version>', "<version>${env.BUILD_NUMBER}-SNAPSHOT</version>")
+
+                    // Write the updated content back to the pom.xml
+                    writeFile(file: 'pom.xml', text: pomContent)
+                }
+            }
+        }
+
+        // Build the image and push it to the registry
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry("${DOCKER_REGISTRY}", DOCKER_REGISTRY_CREDENTIALS_ID) {
+                        def customImage = docker.build("klea-app:latest", "--build-arg=\"VARIABLE=${env.BUILD_NUMBER}-SNAPSHOT\" -f Dockerfile .")
+                        //customImage.push()
+                    }
+                }
+            }
+        }
+
+        // Deploy the image to the K8 cluster (using kubectl in powershell)
+        stage('Deploy to K8') {
+            steps {
+                script {
+                    powershell "kubectl create namespace ${KUBE_NAMESPACE}"
+                    powershell "kubectl apply -f k8s/klea-app/service.yml -n ${KUBE_NAMESPACE}"
+                    powershell "kubectl apply -f k8s/klea-app/deployment.yml -n ${KUBE_NAMESPACE}"
+                }
+            }
+        }
+
+        // Clean up the workspace
+        // stage('Clean up') {
+            // steps {
+                // sh "docker system prune -f"
+            // }
+        // }
+    }
+}

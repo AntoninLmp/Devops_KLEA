@@ -1,0 +1,31 @@
+pipeline {
+    agent {
+        label 'slave'
+    }
+    
+    // Define environment variables
+    environment {
+        GIT_REPO = 'https://github.com/AntoninLmp/Devops_KLEA.git'
+        KUBE_NAMESPACE = 'development'
+    }    
+
+    stages {
+        // Clone the Git repository
+        stage('Git Clone') {
+            steps {
+                git branch: 'main', url: "${GIT_REPO}"
+            }
+        }
+
+        stage('Clean the K8 cluster') {
+            steps {
+                script {
+                    powershell "cd k8s/klea-app"
+                    powershell "kubectl delete -f service.yml -n ${KUBE_NAMESPACE}"
+                    powershell "kubectl delete -f deployment.yml -n ${KUBE_NAMESPACE}"
+                    powershell "kubectl delete namespace ${KUBE_NAMESPACE}"
+                }
+            }
+        }
+    }
+}
