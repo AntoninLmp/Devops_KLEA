@@ -17,12 +17,11 @@ pipeline {
             }
         }
 
-        stage('Clean the K8 cluster') {
+        stage('Clean the K8 development cluster') {
             steps {
                 script {
-                    powershell "cd k8s/klea-app"
-                    powershell "kubectl delete -f service.yml -n ${KUBE_NAMESPACE}"
-                    powershell "kubectl delete -f deployment.yml -n ${KUBE_NAMESPACE}"
+                    powershell "kubectl delete -f k8s/klea-app/service.yml -n ${KUBE_NAMESPACE}"
+                    powershell "kubectl delete -f k8s/klea-app/deployment.yml -n ${KUBE_NAMESPACE}"
                     powershell "kubectl delete namespace ${KUBE_NAMESPACE}"
                 }
             }
