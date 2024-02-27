@@ -17,12 +17,32 @@ pipeline {
             }
         }
 
-        stage('Clean the K8 development cluster') {
+        stage('Clean the K8 Klea app development cluster') {
             steps {
                 script {
                     powershell "kubectl delete -f k8s/klea-app/service.yml -n ${KUBE_NAMESPACE}"
                     powershell "kubectl delete -f k8s/klea-app/deployment.yml -n ${KUBE_NAMESPACE}"
                     powershell "kubectl delete namespace ${KUBE_NAMESPACE}"
+                }
+            }
+        }
+
+        stage('Clean Prometheus from the K8 cluster') {
+            steps {
+                script {
+                    powershell "kubectl delete -f k8s/prometheus/storage.yml"
+                    powershell "kubectl delete -f k8s/prometheus/service.yml"
+                    powershell "kubectl delete -f k8s/prometheus/deployment.yml"
+                }
+            }
+        }
+
+        stage('Clean Graphana from the K8 cluster') {
+            steps {
+                script {
+                    powershell "kubectl delete -f k8s/graphana/storage.yml"
+                    powershell "kubectl delete -f k8s/graphana/service.yml"
+                    powershell "kubectl delete -f k8s/graphana/deployment.yml"
                 }
             }
         }

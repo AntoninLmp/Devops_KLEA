@@ -57,12 +57,5 @@ pipeline {
                 }
             }
         }
-
-        // Clean up the workspace
-        // stage('Clean up') {
-            // steps {
-                // sh "docker system prune -f"
-            // }
-        // }
     }
 }
