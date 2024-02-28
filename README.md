@@ -28,7 +28,7 @@ https://docs.google.com/document/d/1KWgJo2rP_GpqPEL3z3x_VOVbeXd-5-i4JiBwfAdyk9M/
 
 Spawn Jenkins locally
 ```
-docker run -p 8081:8080 -v jenkins_home:/var/jenkins_home --name my-jenkins-container -e JENKINS_JAVA_OPTS="-Djenkins.install.runSetupWizard=false" -e JENKINS_OPTS="--prefix=/jenkins" jenkins jenkins:lts
+docker run -p 8081:8080 -v jenkins_home:/var/jenkins_home --name my-jenkins-container -e JENKINS_JAVA_OPTS="-Djenkins.install.runSetupWizard=false" -e JENKINS_OPTS="--prefix=/jenkins" jenkins/jenkins:lts
 ```
 
 Go to `http://localhost:8081/jenkins`
